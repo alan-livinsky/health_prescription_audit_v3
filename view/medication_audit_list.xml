@@ -4,10 +4,4 @@
     <field name="patient"/>
     <field name="medicament"/>
     <field name="audit_state" string="Estado Auditoría"/>
-    <button name="approve_line"
-            string="Aceptar"
-            help="Aprobar este medicamento"/>
-    <button name="reject_line"
-            string="Rechazar"
-            help="Rechazar este medicamento"/>
 </tree>
