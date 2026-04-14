@@ -71,6 +71,10 @@ class MedicationAudit(ModelSQL, ModelView):
         states={'readonly': True},
         help='Usuario que auditó este medicamento')
 
+    is_audit_overseer = fields.Function(
+        fields.Boolean('Es Supervisor de Auditoría'),
+        'get_is_audit_overseer')
+
     @classmethod
     def __setup__(cls):
         super().__setup__()
@@ -113,6 +117,20 @@ class MedicationAudit(ModelSQL, ModelView):
                 result[record.id] = (
                     line.medicament.id if line.medicament else None)
         return result
+
+    @classmethod
+    def get_is_audit_overseer(cls, records, name):
+        pool = Pool()
+        User = pool.get('res.user')
+        ModelData = pool.get('ir.model.data')
+        try:
+            group_id = ModelData.get_id(
+                'health_prescription_audit_v3', 'group_audit_overseer')
+        except KeyError:
+            return {r.id: False for r in records}
+        current_user = User(Transaction().user)
+        is_overseer = any(g.id == group_id for g in current_user.groups)
+        return {r.id: is_overseer for r in records}
 
     @staticmethod
     def default_audit_state():

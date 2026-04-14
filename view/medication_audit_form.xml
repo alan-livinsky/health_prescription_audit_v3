@@ -18,27 +18,29 @@
                depends="['prescription_line']"/>
     </group>
     <separator id="sep_audit" colspan="4"/>
-    <group string="Estado Auditoría" colspan="4" col="6" id="group_audit_status">
-        <field name="audit_state" string="Estado" colspan="2"/>
-        <field name="audit_date" string="Fecha Auditoría" colspan="2"/>
-        <field name="audit_user" string="Auditor" colspan="2"/>
+    <group string="Estado Auditoría" colspan="4" col="2" id="group_audit_status">
+        <label name="audit_state"/>
+        <field name="audit_state" string="Estado"/>
+        <label name="audit_date"/>
+        <field name="audit_date" string="Fecha Auditoría"/>
+        <label name="audit_user"/>
+        <field name="audit_user" string="Auditor"/>
     </group>
-    <group string="Acciones" colspan="4" col="6" id="group_audit_actions">
+    <group string="Acciones" colspan="4" col="3" id="group_audit_actions">
         <button name="approve_line"
                 string="Aceptar"
                 icon="tryton-ok"
-                help="Aprobar este medicamento"
-                colspan="2"/>
+                help="Aprobar este medicamento"/>
         <button name="reject_line"
                 string="Rechazar"
                 icon="tryton-cancel"
-                help="Rechazar este medicamento"
-                colspan="2"/>
+                help="Rechazar este medicamento"/>
         <button name="reset_line"
                 string="Restablecer"
                 icon="tryton-refresh"
                 help="Restablecer auditoría a pendiente"
-                colspan="2"/>
+                states="{'invisible': Not(Eval('is_audit_overseer', False))}"
+                depends="['is_audit_overseer']"/>
     </group>
     <field name="audit_notes" string="Notas" colspan="4"/>
 </form>

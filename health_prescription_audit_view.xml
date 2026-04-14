@@ -12,6 +12,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="name">Prescription Auditor v3</field>
         </record>
 
+        <record model="res.group" id="group_audit_overseer">
+            <field name="name">Audit Overseer</field>
+        </record>
+
     </data>
     <data>
 
@@ -83,6 +87,24 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <record model="ir.model.access" id="access_select_start_auditor_v3">
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit.select.start')]"/>
             <field name="group" ref="group_prescription_auditor_v3"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_medication_audit_overseer_v3">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
+            <field name="group" ref="group_audit_overseer"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_select_start_overseer_v3">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.audit.select.start')]"/>
+            <field name="group" ref="group_audit_overseer"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
@@ -190,7 +212,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
         </record>
         <record model="ir.model.button.rule" id="rule_reset_line_v3">
             <field name="button" ref="button_reset_line_v3"/>
-            <field name="group" ref="group_prescription_auditor_v3"/>
+            <field name="group" ref="group_audit_overseer"/>
         </record>
 
     </data>
