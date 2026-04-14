@@ -8,9 +8,9 @@ import logging
 
 from trytond.model import fields, ModelSQL, ModelView, Unique
 from trytond.pool import Pool
-from trytond.pyson import Bool, Eval, If
+from trytond.pyson import Eval
 from trytond.transaction import Transaction
-from trytond.wizard import Button, StateTransition, StateView, Wizard
+from trytond.wizard import Button, StateAction, StateTransition, StateView, Wizard
 
 __all__ = [
     'MedicationAudit',
@@ -151,18 +151,10 @@ class SelectPrescriptionStart(ModelView):
     'Seleccionar Receta para Auditoría'
     __name__ = 'gnuhealth.medication.audit.select.start'
 
-    patient = fields.Many2One(
-        'gnuhealth.patient', 'Paciente', required=True)
-
     prescription = fields.Many2One(
         'gnuhealth.prescription.order', 'Receta',
         required=True,
-        domain=[
-            If(Bool(Eval('patient')),
-                [('patient', '=', Eval('patient'))],
-                [])],
-        depends=['patient'],
-        help='Recetas del paciente seleccionado')
+        help='Receta a cargar en auditoría')
 
 
 class SelectPrescriptionWizard(Wizard):
@@ -178,6 +170,8 @@ class SelectPrescriptionWizard(Wizard):
             Button('Confirmar', 'create_records', 'tryton-ok', default=True),
         ])
     create_records = StateTransition()
+    open_audit = StateAction(
+        'health_prescription_audit_v3.act_medication_audit_v3')
 
     def transition_create_records(self):
         MedicationAudit = Pool().get('gnuhealth.medication.audit')
@@ -196,7 +190,7 @@ class SelectPrescriptionWizard(Wizard):
         if to_create:
             MedicationAudit.create(to_create)
 
-        return 'end'
+        return 'open_audit'
 
 
 class ExportResult(ModelView):

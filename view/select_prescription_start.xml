@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
 <form>
-    <label name="patient"/>
-    <field name="patient"/>
     <label name="prescription"/>
     <field name="prescription"/>
 </form>
