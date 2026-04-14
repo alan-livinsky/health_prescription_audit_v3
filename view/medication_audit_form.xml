@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <form>
     <group string="Receta" colspan="4" col="4" id="group_prescription_context">
+        <label name="prescription_line"/>
+        <field name="prescription_line" colspan="3"/>
         <field name="prescription" string="Receta" colspan="2"/>
         <field name="patient" colspan="2"/>
     </group>

@@ -29,6 +29,8 @@ class MedicationAudit(ModelSQL, ModelView):
     prescription_line = fields.Many2One(
         'gnuhealth.prescription.line', 'Línea de Receta',
         required=True,
+        states={'readonly': Eval('id', 0) > 0},
+        depends=['id'],
         help='La línea de receta (medicamento) que se está auditando')
 
     prescription = fields.Function(

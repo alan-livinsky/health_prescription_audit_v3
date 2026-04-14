@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <form>
-    <label name="patient"/>
-    <field name="patient"/>
-    <label name="prescription"/>
-    <field name="prescription"/>
+    <group string="Seleccionar Receta para Auditoría" colspan="4" col="4" id="group_select_prescription">
+        <label name="patient"/>
+        <field name="patient" colspan="3"/>
+        <label name="prescription"/>
+        <field name="prescription" colspan="3"/>
+    </group>
+    <label id="hint_label" string="Se crearán registros de auditoría para todos los medicamentos de la receta seleccionada." colspan="4"/>
 </form>
