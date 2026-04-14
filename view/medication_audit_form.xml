@@ -1,15 +1,21 @@
 <?xml version="1.0"?>
 <form create="0" delete="0">
-    <group string="Cargar Receta" colspan="4" col="2" id="group_load"
-           states="{'invisible': Bool(Eval('prescription_line', False))}">
-        <label name="source_prescription"/>
-        <field name="source_prescription"/>
-    </group>
-    <group string="Contexto" colspan="4" col="4" id="group_context"
-           states="{'invisible': ~Bool(Eval('prescription_line', False))}">
-        <field name="prescription" string="Receta" colspan="2"/>
-        <field name="patient" colspan="2"/>
-        <field name="medicament" colspan="2"/>
+    <label name="source_prescription"
+           states="{'invisible': Bool(Eval('prescription_line', False))}"
+           depends="['prescription_line']"/>
+    <field name="source_prescription" colspan="3"
+           states="{'invisible': Bool(Eval('prescription_line', False))}"
+           depends="['prescription_line']"/>
+    <group string="Contexto" colspan="4" col="4" id="group_context">
+        <field name="prescription" string="Receta" colspan="2"
+               states="{'invisible': Not(Bool(Eval('prescription_line', False)))}"
+               depends="['prescription_line']"/>
+        <field name="patient" colspan="2"
+               states="{'invisible': Not(Bool(Eval('prescription_line', False)))}"
+               depends="['prescription_line']"/>
+        <field name="medicament" colspan="2"
+               states="{'invisible': Not(Bool(Eval('prescription_line', False)))}"
+               depends="['prescription_line']"/>
     </group>
     <separator id="sep_audit" colspan="4"/>
     <group string="Estado Auditoría" colspan="4" col="6" id="group_audit_status">
