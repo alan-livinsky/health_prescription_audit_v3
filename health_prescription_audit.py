@@ -11,7 +11,7 @@ from trytond.model import fields, ModelSQL, ModelView, Unique
 from trytond.pool import Pool
 from trytond.pyson import Bool, Eval
 from trytond.transaction import Transaction
-from trytond.wizard import Button, StateAction, StateTransition, StateView, Wizard
+from trytond.wizard import Button, StateTransition, StateView, Wizard
 
 __all__ = [
     'MedicationAudit',
@@ -218,15 +218,13 @@ class SelectPrescriptionWizard(Wizard):
             Button('Confirmar', 'create_records', 'tryton-ok', default=True),
         ])
     create_records = StateTransition()
-    open_audit = StateAction(
-        'health_prescription_audit_v3.act_medication_audit_v3')
 
     def transition_create_records(self):
         MedicationAudit = Pool().get('gnuhealth.medication.audit')
         MedicationAudit.create([{
             'source_prescription': self.start.prescription.id,
         }])
-        return 'open_audit'
+        return 'end'
 
 
 class ExportResult(ModelView):
