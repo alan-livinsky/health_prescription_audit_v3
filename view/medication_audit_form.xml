@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
 <form>
-    <group string="Receta" colspan="4" col="4" id="group_prescription_context">
-        <label name="prescription_line"/>
-        <field name="prescription_line" colspan="3"/>
+    <group string="Contexto" colspan="4" col="4" id="group_context">
+        <field name="import_record" colspan="2"/>
         <field name="prescription" string="Receta" colspan="2"/>
         <field name="patient" colspan="2"/>
-    </group>
-    <group string="Medicamento" colspan="4" col="2" id="group_medication">
         <field name="medicament" colspan="2"/>
     </group>
     <separator id="sep_audit" colspan="4"/>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="patient"/>
+    <field name="prescription" string="Receta"/>
+    <field name="import_date" string="Fecha Importación"/>
+    <field name="imported_by" string="Importado por"/>
+    <field name="state" string="Estado"/>
+</tree>

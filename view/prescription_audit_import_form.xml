@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<form>
+    <group string="Datos de la Receta" colspan="4" col="4" id="group_prescription">
+        <label name="patient"/>
+        <field name="patient" colspan="3"/>
+        <label name="prescription"/>
+        <field name="prescription" colspan="3"/>
+    </group>
+    <group string="Estado" colspan="4" col="6" id="group_state">
+        <label name="state"/>
+        <field name="state" colspan="1"/>
+        <label name="import_date"/>
+        <field name="import_date" colspan="2"/>
+        <label name="imported_by"/>
+        <field name="imported_by" colspan="1"/>
+    </group>
+    <group string="Acciones" colspan="4" col="2" id="group_actions">
+        <button name="confirm_import"
+                string="Confirmar e Importar Medicamentos"
+                icon="tryton-ok"
+                help="Extraer todas las líneas de la receta e insertarlas en la tabla de auditoría"
+                colspan="2"/>
+    </group>
+    <field name="lines" colspan="4" mode="tree"/>
+</form>

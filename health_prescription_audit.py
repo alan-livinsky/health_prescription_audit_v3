@@ -13,24 +13,104 @@ from trytond.transaction import Transaction
 from trytond.wizard import Button, StateTransition, StateView, Wizard
 
 __all__ = [
+    'PrescriptionAuditImport',
     'MedicationAudit',
-    'SelectPrescriptionStart',
-    'SelectPrescriptionWizard',
     'ExportResult',
     'PrescriptionAuditExport',
 ]
 logger = logging.getLogger(__name__)
 
 
+class PrescriptionAuditImport(ModelSQL, ModelView):
+    'Importación de Receta para Auditoría'
+    __name__ = 'gnuhealth.prescription.audit.import'
+
+    patient = fields.Many2One(
+        'gnuhealth.patient', 'Paciente',
+        required=True,
+        states={'readonly': Eval('state') != 'draft'},
+        depends=['state'])
+
+    prescription = fields.Many2One(
+        'gnuhealth.prescription.order', 'Receta',
+        required=True,
+        domain=[
+            If(Bool(Eval('patient')),
+                [('patient', '=', Eval('patient'))],
+                [])],
+        depends=['patient', 'state'],
+        states={'readonly': Eval('state') != 'draft'},
+        help='Seleccione la receta del paciente')
+
+    import_date = fields.DateTime('Fecha de Importación', readonly=True)
+    imported_by = fields.Many2One('res.user', 'Importado por', readonly=True)
+
+    state = fields.Selection([
+        ('draft', 'Borrador'),
+        ('importado', 'Importado'),
+    ], 'Estado', readonly=True, sort=False)
+
+    lines = fields.One2Many(
+        'gnuhealth.medication.audit', 'import_record',
+        'Medicamentos Importados',
+        states={'readonly': True})
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    @classmethod
+    def __setup__(cls):
+        super().__setup__()
+        cls._buttons.update({
+            'confirm_import': {
+                'invisible': Eval('state') != 'draft',
+                'depends': ['state'],
+            }
+        })
+
+    @classmethod
+    @ModelView.button
+    def confirm_import(cls, records):
+        pool = Pool()
+        MedicationAudit = pool.get('gnuhealth.medication.audit')
+        for record in records:
+            prescription = record.prescription
+            existing = MedicationAudit.search([
+                ('prescription_line.name', '=', prescription.id)
+            ])
+            existing_line_ids = {r.prescription_line.id for r in existing}
+
+            to_create = []
+            for line in prescription.prescription_line:
+                if line.id not in existing_line_ids:
+                    to_create.append({
+                        'prescription_line': line.id,
+                        'import_record': record.id,
+                    })
+
+            if to_create:
+                MedicationAudit.create(to_create)
+
+            cls.write([record], {
+                'state': 'importado',
+                'import_date': datetime.utcnow(),
+                'imported_by': Transaction().user,
+            })
+
+
 class MedicationAudit(ModelSQL, ModelView):
     'Medication Audit'
     __name__ = 'gnuhealth.medication.audit'
 
+    import_record = fields.Many2One(
+        'gnuhealth.prescription.audit.import', 'Importación',
+        readonly=True)
+
     prescription_line = fields.Many2One(
         'gnuhealth.prescription.line', 'Línea de Receta',
         required=True,
-        states={'readonly': Eval('id', 0) > 0},
-        depends=['id'],
+        readonly=True,
         help='La línea de receta (medicamento) que se está auditando')
 
     prescription = fields.Function(
@@ -149,58 +229,6 @@ class MedicationAudit(ModelSQL, ModelView):
             'audit_user': None,
         })
         logger.info('Medication audit record(s) reset to pending')
-
-
-class SelectPrescriptionStart(ModelView):
-    'Seleccionar Receta'
-    __name__ = 'gnuhealth.medication.audit.select.start'
-
-    patient = fields.Many2One(
-        'gnuhealth.patient', 'Paciente', required=True)
-
-    prescription = fields.Many2One(
-        'gnuhealth.prescription.order', 'Receta',
-        required=True,
-        domain=[
-            If(Bool(Eval('patient')),
-                [('patient', '=', Eval('patient'))],
-                [])],
-        depends=['patient'],
-        help='Seleccione la receta cuyas líneas desea cargar en la auditoría')
-
-
-class SelectPrescriptionWizard(Wizard):
-    'Cargar Receta en Auditoría'
-    __name__ = 'gnuhealth.medication.audit.select'
-
-    start_state = 'start'
-    start = StateView(
-        'gnuhealth.medication.audit.select.start',
-        'health_prescription_audit_v3.view_select_prescription_start',
-        [
-            Button('Cancelar', 'end', 'tryton-cancel'),
-            Button('Cargar', 'create_records', 'tryton-ok', default=True),
-        ])
-    create_records = StateTransition()
-
-    def transition_create_records(self):
-        MedicationAudit = Pool().get('gnuhealth.medication.audit')
-        prescription = self.start.prescription
-
-        existing = MedicationAudit.search([
-            ('prescription_line.name', '=', prescription.id)
-        ])
-        existing_line_ids = {r.prescription_line.id for r in existing}
-
-        to_create = []
-        for line in prescription.prescription_line:
-            if line.id not in existing_line_ids:
-                to_create.append({'prescription_line': line.id})
-
-        if to_create:
-            MedicationAudit.create(to_create)
-
-        return 'end'
 
 
 class ExportResult(ModelView):
