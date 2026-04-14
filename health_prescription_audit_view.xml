@@ -12,7 +12,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <!-- GROUP                                                     -->
         <!-- ======================================================= -->
 
-        <record model="res.group" id="group_prescription_auditor">
+        <record model="res.group" id="group_prescription_auditor_v3">
             <field name="name">Prescription Auditor v3</field>
         </record>
 
@@ -23,13 +23,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <!-- VIEWS: MedicationAudit list and form                     -->
         <!-- ======================================================= -->
 
-        <record model="ir.ui.view" id="view_medication_audit_list">
+        <record model="ir.ui.view" id="view_medication_audit_list_v3">
             <field name="model">gnuhealth.medication.audit</field>
             <field name="name">medication_audit_list</field>
             <field name="type">tree</field>
         </record>
 
-        <record model="ir.ui.view" id="view_medication_audit_form">
+        <record model="ir.ui.view" id="view_medication_audit_form_v3">
             <field name="model">gnuhealth.medication.audit</field>
             <field name="name">medication_audit_form</field>
             <field name="type">form</field>
@@ -39,63 +39,63 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <!-- ACTION WINDOW                                            -->
         <!-- ======================================================= -->
 
-        <record model="ir.action.act_window" id="act_medication_audit">
+        <record model="ir.action.act_window" id="act_medication_audit_v3">
             <field name="name">Medication Audit</field>
             <field name="res_model">gnuhealth.medication.audit</field>
         </record>
 
-        <record model="ir.action.act_window.view" id="act_medication_audit_view_list">
+        <record model="ir.action.act_window.view" id="act_medication_audit_view_list_v3">
             <field name="sequence" eval="10"/>
-            <field name="view" ref="view_medication_audit_list"/>
-            <field name="act_window" ref="act_medication_audit"/>
+            <field name="view" ref="view_medication_audit_list_v3"/>
+            <field name="act_window" ref="act_medication_audit_v3"/>
         </record>
 
-        <record model="ir.action.act_window.view" id="act_medication_audit_view_form">
+        <record model="ir.action.act_window.view" id="act_medication_audit_view_form_v3">
             <field name="sequence" eval="20"/>
-            <field name="view" ref="view_medication_audit_form"/>
-            <field name="act_window" ref="act_medication_audit"/>
+            <field name="view" ref="view_medication_audit_form_v3"/>
+            <field name="act_window" ref="act_medication_audit_v3"/>
         </record>
 
         <!-- ======================================================= -->
         <!-- MENU                                                      -->
         <!-- ======================================================= -->
 
-        <menuitem name="Prescription Audit"
+        <menuitem name="Prescription Audit v3"
                   parent="health.gnuhealth_menu"
-                  id="menu_prescription_audit"
+                  id="menu_prescription_audit_v3"
                   sequence="50"
-                  action="act_medication_audit"/>
+                  action="act_medication_audit_v3"/>
 
-        <record model="ir.ui.menu-res.group" id="menu_prescription_audit_group_access">
-            <field name="menu" ref="menu_prescription_audit"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.ui.menu-res.group" id="menu_prescription_audit_group_access_v3">
+            <field name="menu" ref="menu_prescription_audit_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
         <!-- ======================================================= -->
         <!-- MODEL ACCESS                                             -->
         <!-- ======================================================= -->
 
-        <record model="ir.model.access" id="access_medication_audit_auditor">
+        <record model="ir.model.access" id="access_medication_audit_auditor_v3">
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
-            <field name="group" ref="group_prescription_auditor"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="False"/>
         </record>
 
-        <record model="ir.model.access" id="access_select_start_auditor">
+        <record model="ir.model.access" id="access_select_start_auditor_v3">
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit.select.start')]"/>
-            <field name="group" ref="group_prescription_auditor"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="False"/>
         </record>
 
-        <record model="ir.model.access" id="access_export_result_auditor">
+        <record model="ir.model.access" id="access_export_result_auditor_v3">
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit.export.result')]"/>
-            <field name="group" ref="group_prescription_auditor"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
@@ -106,96 +106,95 @@ SPDX-License-Identifier: GPL-3.0-or-later
         <!-- LOAD FROM PRESCRIPTION WIZARD                           -->
         <!-- ======================================================= -->
 
-        <record model="ir.ui.view" id="view_select_prescription_start">
+        <record model="ir.ui.view" id="view_select_prescription_start_v3">
             <field name="model">gnuhealth.medication.audit.select.start</field>
             <field name="name">select_prescription_start</field>
             <field name="type">form</field>
         </record>
 
-        <record model="ir.action.wizard" id="act_select_prescription_wizard">
+        <record model="ir.action.wizard" id="act_select_prescription_wizard_v3">
             <field name="name">Cargar desde Receta</field>
             <field name="wiz_name">gnuhealth.medication.audit.select</field>
         </record>
 
-        <!-- Make the wizard accessible from the list (tree) toolbar -->
-        <record model="ir.action.keyword" id="keyword_load_prescription_tree">
+        <record model="ir.action.keyword" id="keyword_load_prescription_tree_v3">
             <field name="keyword">tree_action</field>
-            <field name="action" ref="act_select_prescription_wizard"/>
+            <field name="action" ref="act_select_prescription_wizard_v3"/>
             <field name="model">gnuhealth.medication.audit,-1</field>
         </record>
 
         <menuitem name="Cargar desde Receta"
-                  parent="menu_prescription_audit"
-                  id="menu_load_prescription"
+                  parent="menu_prescription_audit_v3"
+                  id="menu_load_prescription_v3"
                   sequence="10"
-                  action="act_select_prescription_wizard"/>
+                  action="act_select_prescription_wizard_v3"/>
 
-        <record model="ir.ui.menu-res.group" id="menu_load_prescription_group_access">
-            <field name="menu" ref="menu_load_prescription"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.ui.menu-res.group" id="menu_load_prescription_group_access_v3">
+            <field name="menu" ref="menu_load_prescription_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
         <!-- ======================================================= -->
         <!-- EXPORT WIZARD                                            -->
         <!-- ======================================================= -->
 
-        <record model="ir.ui.view" id="view_audit_export_result">
+        <record model="ir.ui.view" id="view_audit_export_result_v3">
             <field name="model">gnuhealth.medication.audit.export.result</field>
             <field name="name">medication_audit_export</field>
             <field name="type">form</field>
         </record>
 
-        <record model="ir.action.wizard" id="act_export_audit_wizard">
+        <record model="ir.action.wizard" id="act_export_audit_wizard_v3">
             <field name="name">Exportar a CSV</field>
             <field name="wiz_name">gnuhealth.medication.audit.export</field>
         </record>
 
-        <record model="ir.action.keyword" id="keyword_export_audit">
+        <record model="ir.action.keyword" id="keyword_export_audit_v3">
             <field name="keyword">form_action</field>
-            <field name="action" ref="act_export_audit_wizard"/>
+            <field name="action" ref="act_export_audit_wizard_v3"/>
             <field name="model">gnuhealth.medication.audit,-1</field>
         </record>
 
         <menuitem name="Exportar a CSV"
-                  parent="menu_prescription_audit"
-                  id="menu_export_audit_csv"
+                  parent="menu_prescription_audit_v3"
+                  id="menu_export_audit_csv_v3"
                   sequence="60"
-                  action="act_export_audit_wizard"/>
+                  action="act_export_audit_wizard_v3"/>
 
-        <record model="ir.ui.menu-res.group" id="menu_export_csv_group_access">
-            <field name="menu" ref="menu_export_audit_csv"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.ui.menu-res.group" id="menu_export_csv_group_access_v3">
+            <field name="menu" ref="menu_export_audit_csv_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
         <!-- ======================================================= -->
         <!-- BUTTON RULES                                             -->
         <!-- ======================================================= -->
 
-        <record model="ir.model.button" id="button_approve_line">
+        <record model="ir.model.button" id="button_approve_line_v3">
             <field name="name">approve_line</field>
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
         </record>
-        <record model="ir.model.button.rule" id="rule_approve_line">
-            <field name="button" ref="button_approve_line"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.model.button.rule" id="rule_approve_line_v3">
+            <field name="button" ref="button_approve_line_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
-        <record model="ir.model.button" id="button_reject_line">
+        <record model="ir.model.button" id="button_reject_line_v3">
             <field name="name">reject_line</field>
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
         </record>
-        <record model="ir.model.button.rule" id="rule_reject_line">
-            <field name="button" ref="button_reject_line"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.model.button.rule" id="rule_reject_line_v3">
+            <field name="button" ref="button_reject_line_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
-        <record model="ir.model.button" id="button_reset_line">
+        <record model="ir.model.button" id="button_reset_line_v3">
             <field name="name">reset_line</field>
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
         </record>
-        <record model="ir.model.button.rule" id="rule_reset_line">
-            <field name="button" ref="button_reset_line"/>
-            <field name="group" ref="group_prescription_auditor"/>
+        <record model="ir.model.button.rule" id="rule_reset_line_v3">
+            <field name="button" ref="button_reset_line_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
         </record>
 
     </data>
