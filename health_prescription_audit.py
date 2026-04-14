@@ -118,7 +118,7 @@ class MedicationAudit(ModelSQL, ModelView):
         current_user = Pool().get('res.user')(Transaction().user)
         cls.write(records, {
             'audit_state': 'aprobada',
-            'audit_date': datetime.now(),
+            'audit_date': datetime.utcnow(),
             'audit_user': current_user.id,
         })
         logger.info(
@@ -131,7 +131,7 @@ class MedicationAudit(ModelSQL, ModelView):
         current_user = Pool().get('res.user')(Transaction().user)
         cls.write(records, {
             'audit_state': 'rechazada',
-            'audit_date': datetime.now(),
+            'audit_date': datetime.utcnow(),
             'audit_user': current_user.id,
         })
         logger.info(

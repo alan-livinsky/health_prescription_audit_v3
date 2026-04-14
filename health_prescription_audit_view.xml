@@ -118,7 +118,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
         </record>
 
         <record model="ir.action.keyword" id="keyword_load_prescription_tree_v3">
-            <field name="keyword">tree_action</field>
+            <field name="keyword">form_action</field>
             <field name="action" ref="act_select_prescription_wizard_v3"/>
             <field name="model">gnuhealth.medication.audit,-1</field>
         </record>
