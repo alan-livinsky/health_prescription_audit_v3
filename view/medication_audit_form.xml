@@ -43,4 +43,6 @@
                 depends="['is_audit_overseer']"/>
     </group>
     <field name="audit_notes" string="Notas" colspan="4"/>
+    <field name="is_audit_overseer" colspan="4"
+           states="{'invisible': True}"/>
 </form>
