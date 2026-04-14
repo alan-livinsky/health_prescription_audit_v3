@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="prescription" string="Receta"/>
+    <field name="patient"/>
+    <field name="medicament"/>
+    <field name="audit_state" string="Estado Auditoría"/>
+    <button name="approve_line"
+            string="Aceptar"
+            icon="tryton-ok"
+            help="Aprobar este medicamento"/>
+    <button name="reject_line"
+            string="Rechazar"
+            icon="tryton-cancel"
+            help="Rechazar este medicamento"/>
+</tree>

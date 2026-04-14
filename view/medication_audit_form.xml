@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<form>
+    <group string="Receta" colspan="4" col="4" id="group_prescription_context">
+        <field name="prescription" string="Receta" colspan="2"/>
+        <field name="patient" colspan="2"/>
+    </group>
+    <group string="Medicamento" colspan="4" col="2" id="group_medication">
+        <field name="medicament" colspan="2"/>
+    </group>
+    <separator id="sep_audit" colspan="4"/>
+    <group string="Estado Auditoría" colspan="4" col="6" id="group_audit_status">
+        <field name="audit_state" string="Estado" colspan="2"/>
+        <field name="audit_date" string="Fecha Auditoría" colspan="2"/>
+        <field name="audit_user" string="Auditor" colspan="2"/>
+    </group>
+    <group string="Acciones" colspan="4" col="6" id="group_audit_actions">
+        <button name="approve_line"
+                string="Aceptar"
+                icon="tryton-ok"
+                help="Aprobar este medicamento"
+                colspan="2"/>
+        <button name="reject_line"
+                string="Rechazar"
+                icon="tryton-cancel"
+                help="Rechazar este medicamento"
+                colspan="2"/>
+        <button name="reset_line"
+                string="Restablecer"
+                icon="tryton-refresh"
+                help="Restablecer auditoría a pendiente"
+                colspan="2"/>
+    </group>
+    <field name="audit_notes" string="Notas" colspan="4"/>
+</form>
