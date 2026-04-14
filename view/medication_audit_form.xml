@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <form>
     <group string="Contexto" colspan="4" col="4" id="group_context">
-        <field name="import_record" colspan="2"/>
         <field name="prescription" string="Receta" colspan="2"/>
         <field name="patient" colspan="2"/>
         <field name="medicament" colspan="2"/>
