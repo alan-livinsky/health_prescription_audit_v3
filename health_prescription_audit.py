@@ -9,7 +9,7 @@ import logging
 from trytond.exceptions import UserError
 from trytond.model import fields, ModelSQL, ModelView, Unique
 from trytond.pool import Pool
-from trytond.pyson import Eval
+from trytond.pyson import Bool, Eval
 from trytond.transaction import Transaction
 from trytond.wizard import Button, StateAction, StateTransition, StateView, Wizard
 
@@ -27,9 +27,14 @@ class MedicationAudit(ModelSQL, ModelView):
     'Medication Audit'
     __name__ = 'gnuhealth.medication.audit'
 
+    source_prescription = fields.Many2One(
+        'gnuhealth.prescription.order', 'Cargar Receta',
+        states={'invisible': Bool(Eval('prescription_line', False))},
+        depends=['prescription_line'],
+        help='Seleccione una receta para cargar todas sus líneas de medicamentos')
+
     prescription_line = fields.Many2One(
         'gnuhealth.prescription.line', 'Línea de Receta',
-        required=True,
         readonly=True,
         help='La línea de receta (medicamento) que se está auditando')
 
@@ -115,10 +120,27 @@ class MedicationAudit(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        if not Transaction().context.get('from_prescription_wizard'):
-            raise UserError(
-                'Use "Cargar desde Receta" para agregar registros de auditoría.')
-        return super().create(vlist)
+        Prescription = Pool().get('gnuhealth.prescription.order')
+        expanded = []
+        for vals in vlist:
+            vals = dict(vals)
+            source_id = vals.pop('source_prescription', None)
+            if source_id:
+                prescription = Prescription(source_id)
+                existing = cls.search([
+                    ('prescription_line.name', '=', prescription.id)])
+                existing_ids = {r.prescription_line.id for r in existing}
+                for line in prescription.prescription_line:
+                    if line.id not in existing_ids:
+                        expanded.append({'prescription_line': line.id})
+            elif vals.get('prescription_line'):
+                expanded.append(vals)
+            else:
+                raise UserError(
+                    'Seleccione una receta en el campo "Cargar Receta".')
+        if not expanded:
+            return []
+        return super().create(expanded)
 
     @classmethod
     @ModelView.button
@@ -183,22 +205,9 @@ class SelectPrescriptionWizard(Wizard):
 
     def transition_create_records(self):
         MedicationAudit = Pool().get('gnuhealth.medication.audit')
-        prescription = self.start.prescription
-
-        existing = MedicationAudit.search([
-            ('prescription_line.name', '=', prescription.id)
-        ])
-        existing_line_ids = {r.prescription_line.id for r in existing}
-
-        to_create = []
-        for line in prescription.prescription_line:
-            if line.id not in existing_line_ids:
-                to_create.append({'prescription_line': line.id})
-
-        if to_create:
-            with Transaction().set_context(from_prescription_wizard=True):
-                MedicationAudit.create(to_create)
-
+        MedicationAudit.create([{
+            'source_prescription': self.start.prescription.id,
+        }])
         return 'open_audit'
 
 
