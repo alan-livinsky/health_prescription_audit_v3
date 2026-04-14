@@ -4,4 +4,7 @@
     <field name="patient"/>
     <field name="medicament"/>
     <field name="audit_state" string="Estado Auditoría"/>
+    <button name="approve_line" string="Aceptar" icon="tryton-ok"/>
+    <button name="reject_line" string="Rechazar" icon="tryton-cancel"/>
+    <button name="reset_line" string="Restablecer" icon="tryton-refresh"/>
 </tree>
