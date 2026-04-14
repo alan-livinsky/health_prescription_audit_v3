@@ -6,6 +6,7 @@ import io
 from datetime import datetime
 import logging
 
+from trytond.exceptions import UserError
 from trytond.model import fields, ModelSQL, ModelView, Unique
 from trytond.pool import Pool
 from trytond.pyson import Eval
@@ -113,6 +114,13 @@ class MedicationAudit(ModelSQL, ModelView):
         return 'pending'
 
     @classmethod
+    def create(cls, vlist):
+        if not Transaction().context.get('from_prescription_wizard'):
+            raise UserError(
+                'Use "Cargar desde Receta" para agregar registros de auditoría.')
+        return super().create(vlist)
+
+    @classmethod
     @ModelView.button
     def approve_line(cls, records):
         current_user = Pool().get('res.user')(Transaction().user)
@@ -188,7 +196,8 @@ class SelectPrescriptionWizard(Wizard):
                 to_create.append({'prescription_line': line.id})
 
         if to_create:
-            MedicationAudit.create(to_create)
+            with Transaction().set_context(from_prescription_wizard=True):
+                MedicationAudit.create(to_create)
 
         return 'open_audit'
 
