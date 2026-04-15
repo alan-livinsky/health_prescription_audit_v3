@@ -22,7 +22,6 @@ SPDX-License-Identifier: GPL-3.0-or-later
 
         <record model="ir.sequence.type" id="seq_type_purchase_package">
             <field name="name">Medication Purchase Package</field>
-            <field name="code">gnuhealth.medication.purchase.package</field>
         </record>
 
         <record model="ir.sequence" id="seq_purchase_package">

@@ -40,10 +40,14 @@ class MedicationPurchasePackage(ModelSQL, ModelView):
 
     @classmethod
     def create(cls, vlist):
-        Sequence = Pool().get('ir.sequence')
+        pool = Pool()
+        Sequence = pool.get('ir.sequence')
+        ModelData = pool.get('ir.model.data')
+        seq_id = ModelData.get_id(
+            'health_prescription_audit_v3', 'seq_purchase_package')
         vlist = [dict(v) for v in vlist]
         for vals in vlist:
-            vals['name'] = Sequence.get('gnuhealth.medication.purchase.package')
+            vals['name'] = Sequence.get_id(seq_id)
             vals['date'] = date.today()
             vals['created_by'] = Transaction().user
         return super().create(vlist)
