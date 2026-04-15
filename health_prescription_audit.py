@@ -43,7 +43,7 @@ class MedicationAudit(ModelSQL, ModelView):
         'get_from_line')
 
     prescription_issue_date = fields.Function(
-        fields.DateTime('Fecha Emision Prescripcion'),
+        fields.Date('Fecha Emision Prescripcion'),
         'get_from_line')
 
     patient = fields.Function(
@@ -125,7 +125,7 @@ class MedicationAudit(ModelSQL, ModelView):
                 result[record.id] = line.name.id if line.name else None
             elif name == 'prescription_issue_date':
                 result[record.id] = (
-                    line.name.prescription_date
+                    line.name.prescription_date.date()
                     if line.name and line.name.prescription_date else None)
             elif name == 'patient':
                 result[record.id] = (
