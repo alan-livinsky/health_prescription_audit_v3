@@ -45,9 +45,10 @@ class MedicationPurchasePackage(ModelSQL, ModelView):
         ModelData = pool.get('ir.model.data')
         seq_id = ModelData.get_id(
             'health_prescription_audit_v3', 'seq_purchase_package')
+        sequence = Sequence(seq_id)
         vlist = [dict(v) for v in vlist]
         for vals in vlist:
-            vals['name'] = Sequence.get_id(seq_id)
+            vals['name'] = sequence.get()
             vals['date'] = date.today()
             vals['created_by'] = Transaction().user
         return super().create(vlist)
