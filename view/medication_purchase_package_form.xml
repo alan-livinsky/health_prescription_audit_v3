@@ -10,12 +10,5 @@
     </group>
     <label name="notes"/>
     <field name="notes" readonly="1" colspan="4"/>
-    <field name="audit_lines" colspan="4" mode="tree" readonly="1">
-        <tree>
-            <field name="medicament" string="Medicamento"/>
-            <field name="patient" string="Paciente"/>
-            <field name="prescription" string="Receta"/>
-            <field name="audit_state" string="Estado Auditoría"/>
-        </tree>
-    </field>
+    <field name="audit_lines" colspan="4" mode="tree" readonly="1"/>
 </form>
