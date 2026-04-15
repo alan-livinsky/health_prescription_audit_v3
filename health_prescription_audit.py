@@ -9,9 +9,9 @@ import logging
 from trytond.exceptions import UserError
 from trytond.model import fields, ModelSQL, ModelView, Unique
 from trytond.pool import Pool
-from trytond.pyson import Bool, Eval, PYSONEncoder
+from trytond.pyson import Bool, Eval
 from trytond.transaction import Transaction
-from trytond.wizard import Button, StateAction, StateView, Wizard
+from trytond.wizard import Button, StateTransition, StateView, Wizard
 
 __all__ = [
     'MedicationAudit',
@@ -215,22 +215,19 @@ class SelectPrescriptionWizard(Wizard):
         'health_prescription_audit_v3.view_select_prescription_start',
         [
             Button('Cancelar', 'end', 'tryton-cancel'),
-            Button('Confirmar', 'open_audit_list', 'tryton-ok', default=True),
+            Button('Confirmar', 'create_records', 'tryton-ok', default=True),
         ])
-    open_audit_list = StateAction(
-        'health_prescription_audit_v3.act_medication_audit_v3')
+    create_records = StateTransition()
 
-    def do_open_audit_list(self, action):
+    def transition_create_records(self):
         MedicationAudit = Pool().get('gnuhealth.medication.audit')
-        records = MedicationAudit.create([{
+        MedicationAudit.create([{
             'source_prescription': self.start.prescription.id,
         }])
-        action['pyson_domain'] = PYSONEncoder().encode([])
-        action['pyson_context'] = PYSONEncoder().encode({
-            'refresh_token': datetime.utcnow().isoformat(),
-        })
-        data = {'res_id': [record.id for record in records]}
-        return action, data
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class ExportResult(ModelView):
