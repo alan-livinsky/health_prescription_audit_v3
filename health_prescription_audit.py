@@ -194,9 +194,8 @@ class MedicationAudit(ModelSQL, ModelView):
         if not cls._current_user_is_audit_overseer():
             raise UserError(
                 'No tiene los permisos necesarios para restablecer la '
-                'auditoría. Solo los usuarios del grupo Audit Overseer '
-                'pueden usar esta acción.')
-        cls.write(records, {
+                'auditoría.')
+        cls.write(records, {|
             'audit_state': 'pending',
             'audit_date': None,
             'audit_user': None,

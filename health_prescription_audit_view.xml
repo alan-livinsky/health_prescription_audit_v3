@@ -201,10 +201,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="name">reject_line</field>
             <field name="model" search="[('model', '=', 'gnuhealth.medication.audit')]"/>
         </record>
-        <record model="ir.model.button.rule" id="rule_reject_line_v3">
-            <field name="button" ref="button_reject_line_v3"/>
-            <field name="group" ref="group_prescription_auditor_v3"/>
-        </record>
+        <!-- No button rule: reject_line visible to all users with write access -->
 
         <record model="ir.model.button" id="button_reset_line_v3">
             <field name="name">reset_line</field>
