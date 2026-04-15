@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<tree>
+    <field name="prescription" string="Receta"/>
+    <field name="prescription_issue_date" string="Fecha Emision Prescripcion"/>
+    <field name="patient"/>
+    <field name="medicament"/>
+    <field name="audit_state" string="Estado AuditorÃ­a"/>
+    <field name="package" string="Paquete" invisible="1"/>
+</tree>

@@ -50,6 +50,12 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="name">medication_audit_form</field>
         </record>
 
+        <record model="ir.ui.view" id="view_medication_audit_package_list">
+            <field name="model">gnuhealth.medication.audit</field>
+            <field name="type">tree</field>
+            <field name="name">medication_audit_package_list</field>
+        </record>
+
         <!-- ======================================================= -->
         <!-- ACTION WINDOW                                            -->
         <!-- ======================================================= -->

@@ -10,5 +10,9 @@
     </group>
     <label name="notes"/>
     <field name="notes" readonly="1" colspan="4"/>
-    <field name="audit_lines" colspan="4" mode="tree" readonly="1"/>
+    <field name="audit_lines"
+           colspan="4"
+           mode="tree"
+           readonly="1"
+           view_ids="health_prescription_audit_v3.view_medication_audit_package_list"/>
 </form>
