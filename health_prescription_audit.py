@@ -100,6 +100,19 @@ class MedicationAudit(ModelSQL, ModelView):
         })
 
     @classmethod
+    def _current_user_is_audit_overseer(cls):
+        pool = Pool()
+        User = pool.get('res.user')
+        ModelData = pool.get('ir.model.data')
+        try:
+            group_id = ModelData.get_id(
+                'health_prescription_audit_v3', 'group_audit_overseer')
+        except KeyError:
+            return False
+        current_user = User(Transaction().user)
+        return any(g.id == group_id for g in current_user.groups)
+
+    @classmethod
     def get_from_line(cls, records, name):
         result = {}
         for record in records:
@@ -120,16 +133,7 @@ class MedicationAudit(ModelSQL, ModelView):
 
     @classmethod
     def get_is_audit_overseer(cls, records, name):
-        pool = Pool()
-        User = pool.get('res.user')
-        ModelData = pool.get('ir.model.data')
-        try:
-            group_id = ModelData.get_id(
-                'health_prescription_audit_v3', 'group_audit_overseer')
-        except KeyError:
-            return {r.id: False for r in records}
-        current_user = User(Transaction().user)
-        is_overseer = any(g.id == group_id for g in current_user.groups)
+        is_overseer = cls._current_user_is_audit_overseer()
         return {r.id: is_overseer for r in records}
 
     @staticmethod
@@ -187,6 +191,11 @@ class MedicationAudit(ModelSQL, ModelView):
     @classmethod
     @ModelView.button
     def reset_line(cls, records):
+        if not cls._current_user_is_audit_overseer():
+            raise UserError(
+                'No tiene los permisos necesarios para restablecer la '
+                'auditoría. Solo los usuarios del grupo Audit Overseer '
+                'pueden usar esta acción.')
         cls.write(records, {
             'audit_state': 'pending',
             'audit_date': None,

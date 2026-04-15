@@ -39,8 +39,7 @@
                 string="Restablecer"
                 icon="tryton-refresh"
                 help="Restablecer auditoría a pendiente"
-                states="{'invisible': Not(Eval('is_audit_overseer', False))}"
-                depends="['is_audit_overseer']"/>
+                />
     </group>
     <field name="audit_notes" string="Notas" colspan="4"/>
     <field name="is_audit_overseer" colspan="4"

@@ -214,6 +214,10 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="button" ref="button_reset_line_v3"/>
             <field name="group" ref="group_audit_overseer"/>
         </record>
+        <record model="ir.model.button.rule" id="rule_reset_line_auditor_v3">
+            <field name="button" ref="button_reset_line_v3"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
+        </record>
 
     </data>
 </tryton>
