@@ -195,7 +195,7 @@ class MedicationAudit(ModelSQL, ModelView):
             raise UserError(
                 'No tiene los permisos necesarios para restablecer la '
                 'auditoría.')
-        cls.write(records, {|
+        cls.write(records, {
             'audit_state': 'pending',
             'audit_date': None,
             'audit_user': None,
