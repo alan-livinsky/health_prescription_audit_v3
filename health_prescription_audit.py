@@ -3,7 +3,7 @@
 
 import csv
 import io
-from datetime import datetime
+from datetime import datetime, date
 import logging
 
 from trytond.exceptions import UserError
@@ -14,13 +14,47 @@ from trytond.transaction import Transaction
 from trytond.wizard import Button, StateTransition, StateView, Wizard
 
 __all__ = [
+    'MedicationPurchasePackage',
     'MedicationAudit',
+    'CreatePackageStart',
+    'CreatePackageWizard',
     'SelectPrescriptionStart',
     'SelectPrescriptionWizard',
     'ExportResult',
     'PrescriptionAuditExport',
 ]
 logger = logging.getLogger(__name__)
+
+
+class MedicationPurchasePackage(ModelSQL, ModelView):
+    'Medication Purchase Package'
+    __name__ = 'gnuhealth.medication.purchase.package'
+
+    name = fields.Char('Nombre', readonly=True)
+    date = fields.Date('Fecha', readonly=True)
+    created_by = fields.Many2One('res.user', 'Creado por', readonly=True)
+    notes = fields.Text('Observaciones', readonly=True)
+    audit_lines = fields.One2Many(
+        'gnuhealth.medication.audit', 'package', 'Líneas de Auditoría',
+        readonly=True)
+
+    @classmethod
+    def create(cls, vlist):
+        Sequence = Pool().get('ir.sequence')
+        vlist = [dict(v) for v in vlist]
+        for vals in vlist:
+            vals['name'] = Sequence.get('gnuhealth.medication.purchase.package')
+            vals['date'] = date.today()
+            vals['created_by'] = Transaction().user
+        return super().create(vlist)
+
+    @classmethod
+    def write(cls, *args):
+        raise UserError('Los paquetes de compra no se pueden modificar.')
+
+    @classmethod
+    def delete(cls, records):
+        raise UserError('Los paquetes de compra no se pueden eliminar.')
 
 
 class MedicationAudit(ModelSQL, ModelView):
@@ -78,6 +112,15 @@ class MedicationAudit(ModelSQL, ModelView):
     is_audit_overseer = fields.Function(
         fields.Boolean('Es Supervisor de Auditoría'),
         'get_is_audit_overseer')
+
+    package = fields.Many2One(
+        'gnuhealth.medication.purchase.package', 'Paquete',
+        readonly=True,
+        help='Paquete de compra al que pertenece este registro')
+
+    is_packaged = fields.Function(
+        fields.Boolean('En Paquete'),
+        'get_is_packaged')
 
     @classmethod
     def __setup__(cls):
@@ -140,6 +183,10 @@ class MedicationAudit(ModelSQL, ModelView):
     def get_is_audit_overseer(cls, records, name):
         is_overseer = cls._current_user_is_audit_overseer()
         return {r.id: is_overseer for r in records}
+
+    @classmethod
+    def get_is_packaged(cls, records, name):
+        return {r.id: bool(r.package) for r in records}
 
     @staticmethod
     def default_audit_state():
@@ -206,6 +253,73 @@ class MedicationAudit(ModelSQL, ModelView):
             'audit_user': None,
         })
         logger.info('Medication audit record(s) reset to pending')
+
+
+class CreatePackageStart(ModelView):
+    'Crear Paquete de Compra'
+    __name__ = 'gnuhealth.medication.purchase.package.create.start'
+
+    valid_count = fields.Integer('Registros válidos', readonly=True)
+    skipped_count = fields.Integer('Registros omitidos', readonly=True)
+    notes = fields.Text('Observaciones')
+
+    @classmethod
+    def default_valid_count(cls):
+        MedicationAudit = Pool().get('gnuhealth.medication.audit')
+        active_ids = Transaction().context.get('active_ids') or []
+        records = MedicationAudit.browse(active_ids)
+        return sum(
+            1 for r in records
+            if r.audit_state == 'aprobada' and not r.package)
+
+    @classmethod
+    def default_skipped_count(cls):
+        MedicationAudit = Pool().get('gnuhealth.medication.audit')
+        active_ids = Transaction().context.get('active_ids') or []
+        records = MedicationAudit.browse(active_ids)
+        return sum(
+            1 for r in records
+            if r.audit_state != 'aprobada' or r.package)
+
+
+class CreatePackageWizard(Wizard):
+    'Crear Paquete de Compra'
+    __name__ = 'gnuhealth.medication.purchase.package.create'
+
+    start_state = 'start'
+    start = StateView(
+        'gnuhealth.medication.purchase.package.create.start',
+        'health_prescription_audit_v3.view_create_package_start',
+        [
+            Button('Cancelar', 'end', 'tryton-cancel'),
+            Button('Confirmar', 'create_package', 'tryton-ok', default=True),
+        ])
+    create_package = StateTransition()
+
+    def transition_create_package(self):
+        pool = Pool()
+        MedicationAudit = pool.get('gnuhealth.medication.audit')
+        MedicationPurchasePackage = pool.get(
+            'gnuhealth.medication.purchase.package')
+
+        active_ids = Transaction().context.get('active_ids') or []
+        records = MedicationAudit.browse(active_ids)
+        valid = [
+            r for r in records
+            if r.audit_state == 'aprobada' and not r.package]
+
+        if not valid:
+            raise UserError(
+                'No hay medicamentos aprobados sin paquete en la selección.')
+
+        package, = MedicationPurchasePackage.create([{
+            'notes': self.start.notes,
+        }])
+        MedicationAudit.write(valid, {'package': package.id})
+        return 'end'
+
+    def end(self):
+        return 'reload'
 
 
 class SelectPrescriptionStart(ModelView):

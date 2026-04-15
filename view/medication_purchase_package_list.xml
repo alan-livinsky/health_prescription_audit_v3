@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<tree create="0" delete="0">
+    <field name="name" string="Paquete"/>
+    <field name="date" string="Fecha"/>
+    <field name="created_by" string="Creado por"/>
+    <field name="notes" string="Observaciones"/>
+</tree>

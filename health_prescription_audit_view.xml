@@ -16,6 +16,22 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="name">Audit Overseer</field>
         </record>
 
+        <!-- ======================================================= -->
+        <!-- SEQUENCE: MedicationPurchasePackage                     -->
+        <!-- ======================================================= -->
+
+        <record model="ir.sequence.type" id="seq_type_purchase_package">
+            <field name="name">Medication Purchase Package</field>
+            <field name="code">gnuhealth.medication.purchase.package</field>
+        </record>
+
+        <record model="ir.sequence" id="seq_purchase_package">
+            <field name="name">Medication Purchase Package</field>
+            <field name="sequence_type" ref="seq_type_purchase_package"/>
+            <field name="prefix">PKG-${year}-</field>
+            <field name="padding" eval="4"/>
+        </record>
+
     </data>
     <data>
 
@@ -118,6 +134,119 @@ SPDX-License-Identifier: GPL-3.0-or-later
             <field name="perm_write" eval="True"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_delete" eval="False"/>
+        </record>
+
+        <!-- ======================================================= -->
+        <!-- VIEWS: MedicationPurchasePackage                        -->
+        <!-- ======================================================= -->
+
+        <record model="ir.ui.view" id="view_purchase_package_list">
+            <field name="model">gnuhealth.medication.purchase.package</field>
+            <field name="type">tree</field>
+            <field name="name">medication_purchase_package_list</field>
+        </record>
+
+        <record model="ir.ui.view" id="view_purchase_package_form">
+            <field name="model">gnuhealth.medication.purchase.package</field>
+            <field name="type">form</field>
+            <field name="name">medication_purchase_package_form</field>
+        </record>
+
+        <!-- ======================================================= -->
+        <!-- ACTION WINDOW: MedicationPurchasePackage                -->
+        <!-- ======================================================= -->
+
+        <record model="ir.action.act_window" id="act_purchase_package">
+            <field name="name">Paquetes de Compra</field>
+            <field name="res_model">gnuhealth.medication.purchase.package</field>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_purchase_package_view_list">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="view_purchase_package_list"/>
+            <field name="act_window" ref="act_purchase_package"/>
+        </record>
+
+        <record model="ir.action.act_window.view" id="act_purchase_package_view_form">
+            <field name="sequence" eval="20"/>
+            <field name="view" ref="view_purchase_package_form"/>
+            <field name="act_window" ref="act_purchase_package"/>
+        </record>
+
+        <!-- ======================================================= -->
+        <!-- MENU: Paquetes de Compra                                -->
+        <!-- ======================================================= -->
+
+        <menuitem name="Paquetes de Compra"
+                  parent="menu_prescription_audit_v3"
+                  id="menu_purchase_package"
+                  sequence="20"
+                  action="act_purchase_package"/>
+
+        <record model="ir.ui.menu-res.group" id="menu_purchase_package_group_access">
+            <field name="menu" ref="menu_purchase_package"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
+        </record>
+
+        <!-- ======================================================= -->
+        <!-- MODEL ACCESS: MedicationPurchasePackage                 -->
+        <!-- ======================================================= -->
+
+        <record model="ir.model.access" id="access_purchase_package_auditor">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.purchase.package')]"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_purchase_package_overseer">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.purchase.package')]"/>
+            <field name="group" ref="group_audit_overseer"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_create_package_start_auditor">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.purchase.package.create.start')]"/>
+            <field name="group" ref="group_prescription_auditor_v3"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <record model="ir.model.access" id="access_create_package_start_overseer">
+            <field name="model" search="[('model', '=', 'gnuhealth.medication.purchase.package.create.start')]"/>
+            <field name="group" ref="group_audit_overseer"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_delete" eval="False"/>
+        </record>
+
+        <!-- ======================================================= -->
+        <!-- CREATE PACKAGE WIZARD                                   -->
+        <!-- ======================================================= -->
+
+        <record model="ir.ui.view" id="view_create_package_start">
+            <field name="model">gnuhealth.medication.purchase.package.create.start</field>
+            <field name="type">form</field>
+            <field name="name">create_package_start</field>
+        </record>
+
+        <record model="ir.action.wizard" id="act_create_package_wizard">
+            <field name="name">Crear Paquete de Compra</field>
+            <field name="wiz_name">gnuhealth.medication.purchase.package.create</field>
+        </record>
+
+        <record model="ir.action.keyword" id="keyword_create_package">
+            <field name="keyword">form_action</field>
+            <field name="action" ref="act_create_package_wizard"/>
+            <field name="model">gnuhealth.medication.audit,-1</field>
         </record>
 
         <!-- ======================================================= -->

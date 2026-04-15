@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<form create="0" delete="0">
+    <group col="4" colspan="4" id="group_package_header">
+        <label name="name"/>
+        <field name="name" readonly="1"/>
+        <label name="date"/>
+        <field name="date" readonly="1"/>
+        <label name="created_by"/>
+        <field name="created_by" readonly="1" colspan="3"/>
+    </group>
+    <label name="notes"/>
+    <field name="notes" readonly="1" colspan="4"/>
+    <field name="audit_lines" colspan="4" mode="tree" readonly="1">
+        <tree>
+            <field name="medicament" string="Medicamento"/>
+            <field name="patient" string="Paciente"/>
+            <field name="prescription" string="Receta"/>
+            <field name="audit_state" string="Estado Auditoría"/>
+        </tree>
+    </field>
+</form>

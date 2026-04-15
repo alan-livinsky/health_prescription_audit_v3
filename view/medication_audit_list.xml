@@ -1,10 +1,12 @@
 <?xml version="1.0"?>
-<tree create="0" delete="0">
+<tree create="0" delete="0" decoration-info="is_packaged">
     <field name="prescription" string="Receta"/>
     <field name="prescription_issue_date" string="Fecha Emision Prescripcion"/>
     <field name="patient"/>
     <field name="medicament"/>
-    <field name="audit_state" string="Estado AuditorÃ­a"/>
+    <field name="audit_state" string="Estado Auditoría"/>
+    <field name="package" string="Paquete"/>
+    <field name="is_packaged" string="En Paquete" invisible="1"/>
     <button name="approve_line" string="Aceptar" icon="tryton-ok"/>
     <button name="reject_line" string="Rechazar" icon="tryton-cancel"/>
     <button name="reset_line" string="Restablecer" icon="tryton-refresh"/>

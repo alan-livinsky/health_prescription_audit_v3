@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<form>
+    <label string="Registros válidos (aprobados sin paquete):"/>
+    <field name="valid_count" readonly="1"/>
+    <label string="Registros omitidos (ya en paquete o no aprobados):"/>
+    <field name="skipped_count" readonly="1"/>
+    <separator colspan="4"/>
+    <field name="notes" colspan="4" placeholder="Observaciones del paquete (opcional)"/>
+</form>

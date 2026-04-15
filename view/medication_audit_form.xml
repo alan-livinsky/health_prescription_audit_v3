@@ -42,6 +42,8 @@
                 />
     </group>
     <field name="audit_notes" string="Notas" colspan="4"/>
+    <label name="package"/>
+    <field name="package" readonly="1" colspan="3"/>
     <field name="is_audit_overseer" colspan="4"
            states="{'invisible': True}"/>
 </form>
