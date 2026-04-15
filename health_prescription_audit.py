@@ -42,6 +42,10 @@ class MedicationAudit(ModelSQL, ModelView):
         fields.Many2One('gnuhealth.prescription.order', 'Receta'),
         'get_from_line')
 
+    prescription_issue_date = fields.Function(
+        fields.DateTime('Fecha Emision Prescripcion'),
+        'get_from_line')
+
     patient = fields.Function(
         fields.Many2One('gnuhealth.patient', 'Paciente'),
         'get_from_line')
@@ -93,10 +97,7 @@ class MedicationAudit(ModelSQL, ModelView):
                 'invisible': Eval('audit_state') != 'pending',
                 'depends': ['audit_state'],
             },
-            'reset_line': {
-                'invisible': Eval('audit_state') == 'pending',
-                'depends': ['audit_state'],
-            },
+            'reset_line': {},
         })
 
     @classmethod
@@ -122,6 +123,10 @@ class MedicationAudit(ModelSQL, ModelView):
                 continue
             if name == 'prescription':
                 result[record.id] = line.name.id if line.name else None
+            elif name == 'prescription_issue_date':
+                result[record.id] = (
+                    line.name.prescription_date
+                    if line.name and line.name.prescription_date else None)
             elif name == 'patient':
                 result[record.id] = (
                     line.name.patient.id
