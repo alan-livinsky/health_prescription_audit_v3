@@ -6,7 +6,7 @@
     <field name="medicament"/>
     <field name="audit_state" string="Estado Auditoría"/>
     <field name="package" string="Paquete"/>
-    <field name="is_packaged" string="En Paquete" invisible="1"/>
+    <field name="is_packaged" string="En Paquete" tree_invisible="1"/>
     <button name="approve_line" string="Aceptar" icon="tryton-ok"/>
     <button name="reject_line" string="Rechazar" icon="tryton-cancel"/>
     <button name="reset_line" string="Restablecer" icon="tryton-refresh"/>

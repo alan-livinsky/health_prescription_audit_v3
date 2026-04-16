@@ -5,5 +5,5 @@
     <field name="patient"/>
     <field name="medicament"/>
     <field name="audit_state" string="Estado AuditorÃ­a"/>
-    <field name="package" string="Paquete" invisible="1"/>
+    <field name="package" string="Paquete" tree_invisible="1"/>
 </tree>
